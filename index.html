@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>Para Você ❤️</title>
+
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Arial', sans-serif;
+      font-family: Arial, sans-serif;
     }
 
     body {
@@ -20,15 +21,22 @@
       justify-content: center;
     }
 
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+
     .card {
       position: relative;
-      background: rgba(255, 255, 255, 0.9);
+      z-index: 2;
+      background: rgba(255, 255, 255, 0.92);
       padding: 40px;
       border-radius: 20px;
       max-width: 600px;
       text-align: center;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-      z-index: 2;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
     }
 
     .card h1 {
@@ -41,18 +49,12 @@
       color: #333;
       line-height: 1.6;
     }
-
-    canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 1;
-    }
   </style>
 </head>
+
 <body>
 
-  <canvas id="petals"></canvas>
+  <canvas id="hearts"></canvas>
 
   <div class="card">
     <h1>💗 Para você 💗</h1>
@@ -60,58 +62,64 @@
       Desde que tu apareceu, as coisas ficaram diferentes.<br>
       Mais leves. Mais bonitas. Mais verdadeiras.<br><br>
 
-      Não sei se é destino ou só sorte grande,
+      Não sei se é destino ou sorte grande,
       mas sei que gosto de ti mais do que consigo explicar.<br><br>
 
-      Isso aqui é só um jeito simples de dizer:
+      Isso aqui é só um jeito simples de dizer:<br>
       tu é especial pra mim.
     </p>
   </div>
 
   <script>
-    const canvas = document.getElementById("petals");
+    const canvas = document.getElementById("hearts");
     const ctx = canvas.getContext("2d");
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const petals = [];
+    const hearts = [];
 
-    function createPetal() {
+    function createHeart() {
       return {
         x: Math.random() * canvas.width,
-        y: -20,
-        size: Math.random() * 8 + 6,
+        y: -30,
+        size: Math.random() * 10 + 6,
         speed: Math.random() * 1.5 + 0.5,
         drift: Math.random() * 1 - 0.5,
         opacity: Math.random() * 0.5 + 0.5
       };
     }
 
-    for (let i = 0; i < 50; i++) {
-      petals.push(createPetal());
+    for (let i = 0; i < 60; i++) {
+      hearts.push(createHeart());
     }
 
-    function drawPetal(p) {
+    function drawHeart(x, y, size, opacity) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(size / 10, size / 10);
       ctx.beginPath();
-      ctx.fillStyle = `rgba(214, 51, 108, ${p.opacity})`;
-      ctx.ellipse(p.x, p.y, p.size, p.size * 1.2, Math.PI / 4, 0, Math.PI * 2);
+      ctx.moveTo(0, 4);
+      ctx.bezierCurveTo(-5, -6, -15, -2, 0, 12);
+      ctx.bezierCurveTo(15, -2, 5, -6, 0, 4);
+      ctx.fillStyle = `rgba(214, 51, 108, ${opacity})`;
       ctx.fill();
+      ctx.restore();
     }
 
     function animate() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      petals.forEach(p => {
-        p.y += p.speed;
-        p.x += p.drift;
+      hearts.forEach(h => {
+        h.y += h.speed;
+        h.x += h.drift;
 
-        if (p.y > canvas.height + 20) {
-          p.y = -20;
-          p.x = Math.random() * canvas.width;
+        if (h.y > canvas.height + 30) {
+          h.y = -30;
+          h.x = Math.random() * canvas.width;
         }
 
-        drawPetal(p);
+        drawHeart(h.x, h.y, h.size, h.opacity);
       });
 
       requestAnimationFrame(animate);
